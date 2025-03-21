@@ -5,22 +5,20 @@ import { GraphQLClient } from "graphql-request" // Import type definitions from 
 import { Mutex } from "async-mutex"
 
 const HEADER_TYPE_APPLICATION_FORM = "application/x-www-form-urlencoded"
-export const client: any = new GraphQLClient("http://localhost:8080/graphql")
+export const client: any = new GraphQLClient("http://localhost:8000/graphql")
 const mutex = new Mutex()
 
 const authBaseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:8080/graphql",
+  baseUrl: "http://localhost:8000/graphql",
 })
 
 const graphqlBaseQuery = graphqlRequestBaseQuery({
   client,
-  prepareHeaders: (headers, { getState }) => {
-    const state: any = getState()
-    const token = state.auth.accessToken
-    console.log(token)
-    if (token) {
-      headers.set("authorization", `Bearer ${token}`)
-    }
+  prepareHeaders: headers => {
+    headers.set(
+      "Authorization",
+      `Bearer ${sessionStorage.getItem("accessJWT") as string}`,
+    )
     return headers
   },
 })
@@ -35,6 +33,7 @@ export const baseQueryWithReauthGraphql: any = async (
     result = await graphqlBaseQuery({ document, variables }, api, extraOptions)
     return result
   } catch (e: any) {
+    console.log(e)
     // Intercept HTTP 401 responses and do the refresh token call
     if (e && e.response && e.response.status === 401) {
       // Even if multiple apis fail simultaneously with 401

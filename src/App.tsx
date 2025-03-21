@@ -1,11 +1,16 @@
+import { useEffect } from "react"
 import "./App.css"
 import { Counter } from "./features/counter/Counter"
 import { Quotes } from "./features/quotes/Quotes"
 import logo from "./logo.svg"
-import { useGetBooksQuery } from "./services/books"
+import { useAllPostQuery, useSignInMutation } from "./services/users"
 
 const App = () => {
-  const { data, isLoading } = useGetBooksQuery("")
+  const [signIN, { isError, status, data }] = useSignInMutation()
+  useAllPostQuery({
+    page: 1,
+    take: 10,
+  })
 
   return (
     <div className="App">

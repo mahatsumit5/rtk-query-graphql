@@ -12,3 +12,4 @@ type Query {
   books: [Book]
   authors: [Author]
 }
+ type 

@@ -1,15 +1,36 @@
-query getBooks {
-  books {
-    title
+mutation SignIn($input: SignInUser) {
+  signIn(input: $input) {
+    status
+    message
+    token {
+      accessJWT
+    }
   }
 }
 
-query getBooksAndAuthors {
-  books {
-    title
-  }
+query allPost($page: Int!, $take: Int!) {
+  response: getAllPosts(page: $page, take: $take) {
+    totalNumberOfPosts
+    posts {
+      id
+      title
+      content
+      createdAt
+      updatedAt
+      author {
+        id
+        fName
+        lName
+        profile
+        email
+      }
+      _count {
+        comments
+        likes
+      }
 
-  authors {
-    name
+      images
+      hasLiked
+    }
   }
 }
