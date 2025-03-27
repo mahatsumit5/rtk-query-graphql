@@ -1,4 +1,4 @@
-mutation SignIn($input: SignInUser) {
+mutation SignIn($input: SignInMutationVariables) {
   signIn(input: $input) {
     status
     message
@@ -8,29 +8,31 @@ mutation SignIn($input: SignInUser) {
   }
 }
 
-query allPost($page: Int!, $take: Int!) {
-  response: getAllPosts(page: $page, take: $take) {
+query GetAllPosts($args: GetAllPostsQueryVariables) {
+  getAllPosts(args: $args) {
+    status
+    message
     totalNumberOfPosts
     posts {
       id
       title
       content
+      hasLiked
+      _count {
+        likes
+        comments
+      }
+      author {
+        fName
+        email
+        id
+        lName
+        isActive
+        profile
+      }
       createdAt
       updatedAt
-      author {
-        id
-        fName
-        lName
-        profile
-        email
-      }
-      _count {
-        comments
-        likes
-      }
-
       images
-      hasLiked
     }
   }
 }

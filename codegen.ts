@@ -5,17 +5,13 @@ const config: CodegenConfig = {
   documents: "./src/graphql/document.graphql",
   generates: {
     "./src/services/generated.ts": {
-      plugins: [
-        "typescript",
-        "typescript-resolvers",
-        {
-          "typescript-rtk-query": {
-            importBaseApiFrom: "./baseApi",
-            importBaseApiAlternateName: "baseApiWithGraphql",
-            exportHooks: true,
-          },
-        },
-      ],
+      plugins: ["typescript", "typescript-resolvers", "typescript-rtk-query"],
+
+      config: {
+        importBaseApiFrom: "./baseApi",
+        importBaseApiAlternateName: "baseApiWithGraphql",
+        exportHooks: true,
+      },
     },
   },
 }

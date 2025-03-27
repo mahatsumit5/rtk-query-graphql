@@ -114,12 +114,17 @@ export type FriendRequests = {
   toId: Scalars["String"]["output"]
 }
 
-export type GetAllPostsResponse = {
-  __typename?: "GetAllPostsResponse"
+export type GetAllPostsQuery = {
+  __typename?: "GetAllPostsQuery"
   message: Scalars["String"]["output"]
   posts?: Maybe<Array<Post>>
   status: Scalars["Boolean"]["output"]
   totalNumberOfPosts?: Maybe<Scalars["Int"]["output"]>
+}
+
+export type GetAllPostsQueryVariables = {
+  page: Scalars["Int"]["input"]
+  take: Scalars["Int"]["input"]
 }
 
 export type GetMessageByUser = {
@@ -177,7 +182,7 @@ export type Mutation = {
   /** Send friend request to other user */
   sendRequest?: Maybe<SentRequestResponse>
   /** login to your account */
-  signIn?: Maybe<SignInResponse>
+  signIn?: Maybe<SignInMutation>
   /** Create a new user */
   signUp?: Maybe<Response>
   unlikePost: GetPostByUserIdResponse
@@ -219,7 +224,7 @@ export type MutationSendRequestArgs = {
 }
 
 export type MutationSignInArgs = {
-  input?: InputMaybe<SignInUser>
+  input?: InputMaybe<SignInMutationVariables>
 }
 
 export type MutationSignUpArgs = {
@@ -272,7 +277,7 @@ export type Query = {
   __typename?: "Query"
   /** a list of all the users */
   allUsers?: Maybe<AllUsersResponse>
-  getAllPosts?: Maybe<GetAllPostsResponse>
+  getAllPosts?: Maybe<GetAllPostsQuery>
   /** Get all incoming request */
   getFriendRequest?: Maybe<FriendRequestResponse>
   getMessagesByUsers?: Maybe<GetMessageByUserResponse>
@@ -288,8 +293,7 @@ export type QueryAllUsersArgs = {
 }
 
 export type QueryGetAllPostsArgs = {
-  page: Scalars["Int"]["input"]
-  take: Scalars["Int"]["input"]
+  args?: InputMaybe<GetAllPostsQueryVariables>
 }
 
 export type QueryGetMessagesByUsersArgs = {
@@ -338,14 +342,14 @@ export type Session = {
   userEmail: Scalars["String"]["output"]
 }
 
-export type SignInResponse = {
-  __typename?: "SignInResponse"
+export type SignInMutation = {
+  __typename?: "SignInMutation"
   message: Scalars["String"]["output"]
   status: Scalars["Boolean"]["output"]
   token?: Maybe<Token>
 }
 
-export type SignInUser = {
+export type SignInMutationVariables = {
   email: Scalars["String"]["input"]
   password: Scalars["String"]["input"]
 }
@@ -539,7 +543,8 @@ export type ResolversTypes = {
   FriendRequest: ResolverTypeWrapper<FriendRequest>
   FriendRequestResponse: ResolverTypeWrapper<FriendRequestResponse>
   FriendRequests: ResolverTypeWrapper<FriendRequests>
-  GetAllPostsResponse: ResolverTypeWrapper<GetAllPostsResponse>
+  GetAllPostsQuery: ResolverTypeWrapper<GetAllPostsQuery>
+  GetAllPostsQueryVariables: GetAllPostsQueryVariables
   GetMessageByUser: GetMessageByUser
   GetMessageByUserResponse: ResolverTypeWrapper<GetMessageByUserResponse>
   GetPostByUserIdResponse: ResolverTypeWrapper<GetPostByUserIdResponse>
@@ -558,8 +563,8 @@ export type ResolversTypes = {
   SendMessageResponse: ResolverTypeWrapper<SendMessageResponse>
   SentRequestResponse: ResolverTypeWrapper<SentRequestResponse>
   Session: ResolverTypeWrapper<Session>
-  SignInResponse: ResolverTypeWrapper<SignInResponse>
-  SignInUser: SignInUser
+  SignInMutation: ResolverTypeWrapper<SignInMutation>
+  SignInMutationVariables: SignInMutationVariables
   SignUpUser: SignUpUser
   Status: Status
   String: ResolverTypeWrapper<Scalars["String"]["output"]>
@@ -585,7 +590,8 @@ export type ResolversParentTypes = {
   FriendRequest: FriendRequest
   FriendRequestResponse: FriendRequestResponse
   FriendRequests: FriendRequests
-  GetAllPostsResponse: GetAllPostsResponse
+  GetAllPostsQuery: GetAllPostsQuery
+  GetAllPostsQueryVariables: GetAllPostsQueryVariables
   GetMessageByUser: GetMessageByUser
   GetMessageByUserResponse: GetMessageByUserResponse
   GetPostByUserIdResponse: GetPostByUserIdResponse
@@ -603,8 +609,8 @@ export type ResolversParentTypes = {
   SendMessageResponse: SendMessageResponse
   SentRequestResponse: SentRequestResponse
   Session: Session
-  SignInResponse: SignInResponse
-  SignInUser: SignInUser
+  SignInMutation: SignInMutation
+  SignInMutationVariables: SignInMutationVariables
   SignUpUser: SignUpUser
   String: Scalars["String"]["output"]
   Subscription: {}
@@ -745,10 +751,10 @@ export type FriendRequestsResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
-export type GetAllPostsResponseResolvers<
+export type GetAllPostsQueryResolvers<
   ContextType = any,
   ParentType extends
-    ResolversParentTypes["GetAllPostsResponse"] = ResolversParentTypes["GetAllPostsResponse"],
+    ResolversParentTypes["GetAllPostsQuery"] = ResolversParentTypes["GetAllPostsQuery"],
 > = {
   message?: Resolver<ResolversTypes["String"], ParentType, ContextType>
   posts?: Resolver<
@@ -870,7 +876,7 @@ export type MutationResolvers<
     RequireFields<MutationSendRequestArgs, "toID">
   >
   signIn?: Resolver<
-    Maybe<ResolversTypes["SignInResponse"]>,
+    Maybe<ResolversTypes["SignInMutation"]>,
     ParentType,
     ContextType,
     Partial<MutationSignInArgs>
@@ -947,10 +953,10 @@ export type QueryResolvers<
     Partial<QueryAllUsersArgs>
   >
   getAllPosts?: Resolver<
-    Maybe<ResolversTypes["GetAllPostsResponse"]>,
+    Maybe<ResolversTypes["GetAllPostsQuery"]>,
     ParentType,
     ContextType,
-    RequireFields<QueryGetAllPostsArgs, "page" | "take">
+    Partial<QueryGetAllPostsArgs>
   >
   getFriendRequest?: Resolver<
     Maybe<ResolversTypes["FriendRequestResponse"]>,
@@ -1030,10 +1036,10 @@ export type SessionResolvers<
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
-export type SignInResponseResolvers<
+export type SignInMutationResolvers<
   ContextType = any,
   ParentType extends
-    ResolversParentTypes["SignInResponse"] = ResolversParentTypes["SignInResponse"],
+    ResolversParentTypes["SignInMutation"] = ResolversParentTypes["SignInMutation"],
 > = {
   message?: Resolver<ResolversTypes["String"], ParentType, ContextType>
   status?: Resolver<ResolversTypes["Boolean"], ParentType, ContextType>
@@ -1144,7 +1150,7 @@ export type Resolvers<ContextType = any> = {
   FriendRequest?: FriendRequestResolvers<ContextType>
   FriendRequestResponse?: FriendRequestResponseResolvers<ContextType>
   FriendRequests?: FriendRequestsResolvers<ContextType>
-  GetAllPostsResponse?: GetAllPostsResponseResolvers<ContextType>
+  GetAllPostsQuery?: GetAllPostsQueryResolvers<ContextType>
   GetMessageByUserResponse?: GetMessageByUserResponseResolvers<ContextType>
   GetPostByUserIdResponse?: GetPostByUserIdResponseResolvers<ContextType>
   LogInResponse?: LogInResponseResolvers<ContextType>
@@ -1157,7 +1163,7 @@ export type Resolvers<ContextType = any> = {
   SendMessageResponse?: SendMessageResponseResolvers<ContextType>
   SentRequestResponse?: SentRequestResponseResolvers<ContextType>
   Session?: SessionResolvers<ContextType>
-  SignInResponse?: SignInResponseResolvers<ContextType>
+  SignInMutation?: SignInMutationResolvers<ContextType>
   Subscription?: SubscriptionResolvers<ContextType>
   Token?: TokenResolvers<ContextType>
   UploadAPostResponse?: UploadAPostResponseResolvers<ContextType>
@@ -1166,7 +1172,7 @@ export type Resolvers<ContextType = any> = {
 }
 
 export const SignInDocument = `
-    mutation SignIn($input: SignInUser) {
+    mutation SignIn($input: SignInMutationVariables) {
   signIn(input: $input) {
     status
     message
@@ -1176,29 +1182,32 @@ export const SignInDocument = `
   }
 }
     `
-export const AllPostDocument = `
-    query allPost($page: Int!, $take: Int!) {
-  response: getAllPosts(page: $page, take: $take) {
+export const GetAllPostsDocument = `
+    query GetAllPosts($args: GetAllPostsQueryVariables) {
+  getAllPosts(args: $args) {
+    status
+    message
     totalNumberOfPosts
     posts {
       id
       title
       content
+      hasLiked
+      _count {
+        likes
+        comments
+      }
+      author {
+        fName
+        email
+        id
+        lName
+        isActive
+        profile
+      }
       createdAt
       updatedAt
-      author {
-        id
-        fName
-        lName
-        profile
-        email
-      }
-      _count {
-        comments
-        likes
-      }
       images
-      hasLiked
     }
   }
 }
@@ -1206,15 +1215,21 @@ export const AllPostDocument = `
 
 const injectedRtkApi = baseApiWithGraphql.injectEndpoints({
   endpoints: build => ({
-    SignIn: build.mutation<SignInResponse, MutationSignInArgs>({
+    SignIn: build.mutation<SignInMutation, SignInMutationVariables | void>({
       query: variables => ({ document: SignInDocument, variables }),
     }),
-    allPost: build.query<GetAllPostsResponse, QueryGetAllPostsArgs>({
-      query: variables => ({ document: AllPostDocument, variables }),
+    GetAllPosts: build.query<
+      GetAllPostsQuery,
+      GetAllPostsQueryVariables | void
+    >({
+      query: variables => ({ document: GetAllPostsDocument, variables }),
     }),
   }),
 })
 
 export { injectedRtkApi as api }
-export const { useSignInMutation, useAllPostQuery, useLazyAllPostQuery } =
-  injectedRtkApi
+export const {
+  useSignInMutation,
+  useGetAllPostsQuery,
+  useLazyGetAllPostsQuery,
+} = injectedRtkApi
